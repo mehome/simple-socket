@@ -1,14 +1,14 @@
 
 all:
-	make clien
+	make client
 	make server
 
-clien: inet_address.c tcp_socket.c test-tcp-client.c
+client: inet_address.c tcp_socket.c test-tcp-client.c
 	gcc $+ -o $@
 
 server: inet_address.c tcp_socket.c test-tcp-server.c
 	gcc $+ -o $@
 
 clean:
-	@rm -rfv clien
+	@rm -rfv client
 	@rm -rfv server 

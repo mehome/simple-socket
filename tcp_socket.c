@@ -58,30 +58,29 @@ int tcp_recv(int socket, char *buf, int len)
 	}
 	return -1;
 }
-int tcp_setoption(int socket, tcp_option_t tcpo)
+int tcp_reuse_address(int socket)
 {
-	int value = 0;
+	int value = 1;
 	socklen_t len = sizeof(value);
 
-	switch( tcpo )
-	{
-		case tcpo_reuse:
-			value = 1;
-			return setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (void*)&value, len);
-		case tcpo_block:
-			value = fcntl(socket, F_GETFL);
-			value = value & ~(O_NONBLOCK);
-			return fcntl(socket, F_SETFL, value);
-		case tcpo_unblock:
-			value = fcntl(socket, F_GETFL);
-			value = value | O_NONBLOCK;
-			return fcntl(socket, F_SETFL, value);
-	}
-	return -1;
+	return setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (void*)&value, len);
 }
-int tcp_getoption(int socket, tcp_option_t tcpo)
+int tcp_block(int socket)
 {
-	return 0;
+	int value = 0;
+
+	value = fcntl(socket, F_GETFL);
+	value = value & ~(O_NONBLOCK);
+	return fcntl(socket, F_SETFL, value);
+}
+
+int tcp_nonblock(int socket)
+{
+	int value = 0;
+
+	value = fcntl(socket, F_GETFL);
+	value = value | O_NONBLOCK;
+	return fcntl(socket, F_SETFL, value);
 }
 int tcp_state(int socket)
 {

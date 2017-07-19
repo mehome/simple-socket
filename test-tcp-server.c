@@ -11,11 +11,11 @@ int main(int argc, char **argv)
 	int lastime = time(0);
 
 	lsock = tcp_open();
-	tcp_setoption(lsock, tcpo_reuse);
+	tcp_reuse_address(lsock);
 	tcp_bind(lsock, 0, 9999);
 	tcp_listen(lsock, 1);
 	wsock = tcp_accept(lsock);
-	tcp_setoption(wsock, tcpo_unblock);
+	tcp_nonblock(wsock);
 
 	while(wsock > 0)
 	{
@@ -34,8 +34,16 @@ int main(int argc, char **argv)
 			{
 				lastime = time(0);
 				printf("wsock(%d).state=%d\n", wsock, tcp_state(wsock)); 
+				if( tcp_state(wsock) > 1 )
+				{
+					break;
+				}
 			}
 		}
 		usleep(1000);
-	}
+	}//while(wsock>0)
+	tcp_close(wsock);
+	tcp_close(lsock);
+
+	return 0;
 }

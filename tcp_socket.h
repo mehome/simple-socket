@@ -18,14 +18,6 @@
 };
  */
 
-typedef enum
-{
-	tcpo_reuse= 1,
-	tcpo_block= 2,
-	tcpo_unblock= 3,
-	tcpo_state = 4,
-}tcp_option_t;
-
 int tcp_open(void);
 int tcp_bind(int socket, int ip, int port);
 int tcp_listen(int socket, int backlog);
@@ -33,8 +25,9 @@ int tcp_accept(int socket);
 int tcp_connect(int socket, int ip, int port);
 int tcp_send(int socket, char *data, int len);
 int tcp_recv(int socket, char *buf, int len);
-int tcp_setoption(int socket, tcp_option_t tcpo);
-int tcp_getoption(int socket, tcp_option_t tcpo);
+int tcp_reuse_address(int socket);
+int tcp_block(int socket);
+int tcp_nonblock(int socket);
 int tcp_state(int socket);
 int tcp_close(int socket);
 

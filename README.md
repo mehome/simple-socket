@@ -12,8 +12,9 @@ int tcp_accept(int socket);
 int tcp_connect(int socket, int ip, int port);
 int tcp_send(int socket, char *data, int len);
 int tcp_recv(int socket, char *buf, int len);
-int tcp_setoption(int socket, tcp_option_t tcpo);
-int tcp_getoption(int socket, tcp_option_t tcpo);
+int tcp_reuse_address(int socket);
+int tcp_block(int socket);
+int tcp_nonblock(int socket);
 int tcp_state(int socket);
 int tcp_close(int socket);
 
@@ -37,11 +38,11 @@ int main(int argc, char **argv)
 	int lastime = time(0);
 
 	lsock = tcp_open();
-	tcp_setoption(lsock, tcpo_reuse);
+	tcp_reuse_address(lsock);
 	tcp_bind(lsock, 0, 9999);
 	tcp_listen(lsock, 1);
 	wsock = tcp_accept(lsock);
-	tcp_setoption(wsock, tcpo_unblock);
+	tcp_nonblock(wsock);
 
 	while(wsock > 0)
 	{
@@ -60,10 +61,18 @@ int main(int argc, char **argv)
 			{
 				lastime = time(0);
 				printf("wsock(%d).state=%d\n", wsock, tcp_state(wsock)); 
+				if( tcp_state(wsock) > 1 )
+				{
+					break;
+				}
 			}
 		}
 		usleep(1000);
-	}
+	}//while(wsock>0)
+	tcp_close(wsock);
+	tcp_close(lsock);
+
+	return 0;
 }
 
 
@@ -85,7 +94,7 @@ int main(int argc, char **argv)
 	int lastime = time(0);
 
 	wsock = tcp_open();
-	tcp_setoption(wsock, tcpo_unblock);
+	tcp_nonblock(wsock);
 	tcp_connect(wsock, 0, 9999);
 
 	while(wsock > 0)
@@ -105,10 +114,17 @@ int main(int argc, char **argv)
 				char *p = "hello there, anyone hear me?";
 				lastime = time(0);
 				tcp_send(wsock, p, strlen(p));
+				if( tcp_state(wsock) != 1 )
+				{
+					break;
+				}
 			}
 		}
 		usleep(1000);
-	}
+	}//while(while>0)
+	tcp_close(wsock);
+
+	return 0;
 }
 
 

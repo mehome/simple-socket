@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 	int lastime = time(0);
 
 	wsock = tcp_open();
-	tcp_setoption(wsock, tcpo_unblock);
+	tcp_nonblock(wsock);
 	tcp_connect(wsock, 0, 9999);
 
 	while(wsock > 0)
@@ -30,8 +30,15 @@ int main(int argc, char **argv)
 				char *p = "hello there, anyone hear me?";
 				lastime = time(0);
 				tcp_send(wsock, p, strlen(p));
+				if( tcp_state(wsock) != 1 )
+				{
+					break;
+				}
 			}
 		}
 		usleep(1000);
-	}
+	}//while(while>0)
+	tcp_close(wsock);
+
+	return 0;
 }
