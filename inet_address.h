@@ -2,6 +2,9 @@
 #define __INET_ADDRESS_H__
 #include <netinet/in.h>
 
+const char* inet_get_ipstring(struct sockaddr_in *address);
+int inet_set_ipstring(struct sockaddr_in *address, const char *ip);
+
 int inet_get_ip(struct sockaddr_in *address);
 int inet_set_ip(struct sockaddr_in *address, int ip);
 

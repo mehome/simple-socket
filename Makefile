@@ -1,14 +1,24 @@
 
 all:
-	make client
-	make server
+	make tcpclient
+	make tcpserver
+	make udpclient
+	make udpserver
 
-client: inet_address.c tcp_socket.c test-tcp-client.c
+tcpclient: inet_address.c tcp_socket.c test-tcp-client.c
 	gcc $+ -o $@
 
-server: inet_address.c tcp_socket.c test-tcp-server.c
+tcpserver: inet_address.c tcp_socket.c test-tcp-server.c
 	gcc $+ -o $@
+
+udpclient: inet_address.c udp_socket.c test-udp-client.c
+	gcc $+ -o $@
+
+udpserver: inet_address.c udp_socket.c test-udp-server.c
+	gcc $+ -o $@
+
 
 clean:
-	@rm -rfv client
-	@rm -rfv server 
+	@rm -rfv *.o
+	@rm -rfv *client
+	@rm -rfv *server 

@@ -23,6 +23,7 @@ int tcp_bind(int socket, int ip, int port);
 int tcp_listen(int socket, int backlog);
 int tcp_accept(int socket);
 int tcp_connect(int socket, int ip, int port);
+int udp_connects(int socket, const char *ip, int port);
 int tcp_send(int socket, char *data, int len);
 int tcp_recv(int socket, char *buf, int len);
 int tcp_reuse_address(int socket);

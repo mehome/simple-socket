@@ -42,6 +42,17 @@ int tcp_connect(int socket, int ip, int port)
 	inet_set_port(&address, port);
 	return connect(socket, (struct sockaddr*)&address, sizeof(address));
 }
+int tcp_connects(int socket, const char *ip, int port)
+{
+	if( ip )
+	{
+		struct sockaddr_in address;
+
+		inet_set_ipstring(&address, ip);
+		return tcp_connect(socket, inet_get_ip(&address), port);
+	}
+	return -1;
+}
 int tcp_send(int socket, char *data, int len)
 {
 	if( data && len > 0 )

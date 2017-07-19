@@ -1,5 +1,5 @@
 *.o
 *.swp
 tags
-client
-server
+*client
+*server

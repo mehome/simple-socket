@@ -1,6 +1,23 @@
 #include <arpa/inet.h>
 #include "inet_address.h"
 
+const char* inet_get_ipstring(struct sockaddr_in *address)
+{
+	if( address )
+	{
+		return inet_ntoa( address->sin_addr );
+	}
+	return "0.0.0.0";
+}
+int inet_set_ipstring(struct sockaddr_in *address, const char *ip)
+{
+	if( address && ip )
+	{
+		inet_aton(ip, &address->sin_addr);
+		return address->sin_addr.s_addr;
+	}
+	return -1;
+}
 
 int inet_get_ip(struct sockaddr_in *address)
 {
